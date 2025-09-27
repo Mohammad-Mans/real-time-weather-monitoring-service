@@ -1,9 +1,15 @@
-﻿namespace RTWMS;
+﻿using RTWMS.API;
+using RTWMS.Domain.Factories;
+using RTWMS.Domain.Services;
+
+namespace RTWMS;
 
 class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("Hello World");
+        var botFactory = new WeatherBotFactory();
+
+        var botConfigService = new BotConfigurationService(botFactory);
     }
 }
