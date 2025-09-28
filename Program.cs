@@ -13,5 +13,8 @@ class Program
 
         var botConfigService = new BotConfigurationService(botFactory);
         var weatherService = new WeatherMonitoringService(parserFactory, botConfigService);
+
+        var mainMenu = new WeatherMonitoringMenu(weatherService);
+        mainMenu.Run();
     }
 }
