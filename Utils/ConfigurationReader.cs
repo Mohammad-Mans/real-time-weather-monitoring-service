@@ -18,7 +18,13 @@ public class ConfigurationReader
         {
             var configPath = GetConfigPath();
             var jsonString = File.ReadAllText(configPath);
-            var config = JsonSerializer.Deserialize<AllBotsConfigs>(jsonString);
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            var config = JsonSerializer.Deserialize<AllBotsConfigs>(jsonString, options);
             return config ?? new AllBotsConfigs();
         }
         catch (Exception ex)
