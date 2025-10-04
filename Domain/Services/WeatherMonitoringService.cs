@@ -3,10 +3,10 @@ using RTWMS.Domain.Interfaces;
 
 namespace RTWMS.Domain.Services;
 
-public class WeatherMonitoringService(IParserFactory parserFactory, IBotConfigurationService botConfigService)
+public class WeatherMonitoringService(IParserFactory parserFactory, IBotManager botManager)
     : IWeatherMonitoringService
 {
-    private readonly List<WeatherBot> _bots = botConfigService.GetConfiguredBots();
+    private readonly List<WeatherBot> _bots = botManager.GetConfiguredBots();
 
     public void ProcessWeatherInput(string input)
     {

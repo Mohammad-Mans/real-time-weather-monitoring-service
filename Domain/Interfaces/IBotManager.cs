@@ -2,7 +2,7 @@ using RTWMS.Domain.Bots;
 
 namespace RTWMS.Domain.Interfaces;
 
-public interface IBotConfigurationService
+public interface IBotManager
 {
     List<WeatherBot> GetConfiguredBots();
 }
