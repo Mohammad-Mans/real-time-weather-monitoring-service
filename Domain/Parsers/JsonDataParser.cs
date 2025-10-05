@@ -4,29 +4,18 @@ using RTWMS.Domain.Models;
 
 namespace RTWMS.Domain.Parsers;
 
-public class JsonDataParser : IDataParser
+public sealed class JsonDataParser : IDataParser
 {
-    public WeatherData? Parse(string input)
+    public bool TryParse(string input, out WeatherData? data)
     {
         try
         {
-            return JsonSerializer.Deserialize<WeatherData>(input);
+            data = JsonSerializer.Deserialize<WeatherData>(input);
+            return data is not null;
         }
         catch (JsonException)
         {
-            return null;
-        }
-    }
-
-    public static bool IsValidFormat(string input)
-    {
-        try
-        {
-            JsonSerializer.Deserialize<WeatherData>(input);
-            return true;
-        }
-        catch (JsonException)
-        {
+            data = null;
             return false;
         }
     }

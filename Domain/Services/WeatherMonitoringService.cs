@@ -3,22 +3,21 @@ using RTWMS.Domain.Interfaces;
 
 namespace RTWMS.Domain.Services;
 
-public class WeatherMonitoringService(IParserFactory parserFactory, IBotManager botManager)
+public class WeatherMonitoringService(IParserSelector parserSelector, IBotManager botManager)
     : IWeatherMonitoringService
 {
     private readonly List<WeatherBot> _bots = botManager.GetConfiguredBots();
 
     public void ProcessWeatherInput(string input)
     {
-        var parser = parserFactory.GetParser(input);
+        var parser = parserSelector.SelectParser(input);
         if (parser == null)
         {
             Console.WriteLine("Unsupported data format");
             return;
         }
 
-        var weatherData = parser.Parse(input);
-        if (weatherData == null)
+        if (!parser.TryParse(input, out var weatherData) || weatherData == null)
         {
             Console.WriteLine("Failed to parse weather data");
             return;
