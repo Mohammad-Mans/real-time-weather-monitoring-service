@@ -55,7 +55,7 @@ public class WeatherMonitoringMenu(IWeatherMonitoringService weatherService)
 
     private void EnterWeatherData()
     {
-        Console.WriteLine("\nEnter weather data (JSON or XML format):");
+        Console.WriteLine("\nEnter weather data (JSON, XML, or YAML format):");
         Console.Write("Weather data: ");
         var input = Console.ReadLine();
 
