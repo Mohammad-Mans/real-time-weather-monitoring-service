@@ -1,30 +1,48 @@
 using RTWMS.Domain.Interfaces;
+using RTWMS.Domain.Models;
 
 namespace RTWMS.Domain.Services;
 
-public class WeatherMonitoringService(IParserSelector parserSelector, IBotManager botManager)
-    : IWeatherMonitoringService
+public class WeatherMonitoringService : IWeatherMonitoringService
 {
-    private readonly List<IWeatherBot> _bots = botManager.GetConfiguredBots();
+    private readonly IParserSelector _parserSelector;
+    private readonly List<IWeatherBot> _bots;
+    private readonly ISubject _weatherDataSubject;
 
-    public void ProcessWeatherInput(string input)
+    public WeatherMonitoringService(IParserSelector parserSelector, IBotManager botManager, ISubject weatherDataSubject)
     {
-        var parser = parserSelector.SelectParser(input);
+        _parserSelector = parserSelector;
+        _bots = botManager.GetConfiguredBots();
+        _weatherDataSubject = weatherDataSubject;
+
+        foreach (var bot in _bots)
+        {
+            _weatherDataSubject.Attach(bot);
+        }
+    }
+
+    public WeatherData? ProcessWeatherInput(string input)
+    {
+        var parser = _parserSelector.SelectParser(input);
         if (parser == null)
         {
             Console.WriteLine("Unsupported data format");
-            return;
+            return null;
         }
 
         if (!parser.TryParse(input, out var weatherData) || weatherData == null)
         {
             Console.WriteLine("Failed to parse weather data");
-            return;
+            return null;
         }
 
-        foreach (var bot in _bots)
-        {
-            bot.TryProcessData(weatherData);
-        }
+        _weatherDataSubject.UpdateWeatherData(weatherData);
+
+        return weatherData;
+    }
+
+    public void UpdateWeatherData(WeatherData weatherData)
+    {
+        _weatherDataSubject.UpdateWeatherData(weatherData);
     }
 }

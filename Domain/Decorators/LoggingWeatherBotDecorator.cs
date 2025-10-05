@@ -32,4 +32,9 @@ public sealed class LoggingWeatherBotDecorator(IWeatherBot weatherBot) : IWeathe
             throw;
         }
     }
+
+    public void Update(WeatherData weatherData)
+    {
+        TryProcessData(weatherData);
+    }
 }

@@ -14,4 +14,9 @@ public abstract class WeatherBot(string message) : IWeatherBot
     }
 
     public abstract bool TryProcessData(WeatherData data);
+
+    public void Update(WeatherData weatherData)
+    {
+        TryProcessData(weatherData);
+    }
 }

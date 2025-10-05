@@ -19,8 +19,9 @@ class Program
         var botFactory = new WeatherBotFactory(decorators);
         var botManager = BotManager.GetInstance(botFactory);
         var parserSelector = new ParserSelector();
+        var weatherDataSubject = new WeatherDataSubject();
 
-        var weatherService = new WeatherMonitoringService(parserSelector, botManager);
+        var weatherService = new WeatherMonitoringService(parserSelector, botManager, weatherDataSubject);
 
         var mainMenu = new WeatherMonitoringMenu(weatherService);
         mainMenu.Run();

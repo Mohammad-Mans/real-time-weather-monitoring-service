@@ -1,6 +1,9 @@
+using RTWMS.Domain.Models;
+
 namespace RTWMS.Domain.Interfaces;
 
 public interface IWeatherMonitoringService
 {
-    void ProcessWeatherInput(string input);
+    WeatherData? ProcessWeatherInput(string input);
+    void UpdateWeatherData(WeatherData weatherData);
 }
