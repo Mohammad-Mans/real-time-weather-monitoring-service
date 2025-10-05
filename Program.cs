@@ -1,5 +1,7 @@
 using RTWMS.API;
+using RTWMS.Domain.Decorators;
 using RTWMS.Domain.Factories;
+using RTWMS.Domain.Interfaces;
 using RTWMS.Domain.Parsers;
 using RTWMS.Domain.Services;
 
@@ -9,7 +11,12 @@ class Program
 {
     static void Main(string[] args)
     {
-        var botFactory = new WeatherBotFactory();
+        var decorators = new IWeatherBotDecorator[]
+        {
+            new LoggingDecorator(),
+        };
+
+        var botFactory = new WeatherBotFactory(decorators);
         var botManager = BotManager.GetInstance(botFactory);
         var parserSelector = new ParserSelector();
 
