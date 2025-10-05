@@ -1,7 +1,7 @@
 # Real-Time Weather Monitoring System
 
 A C# console application that monitors weather data in **real-time** and activates specialized **weather bots** based on temperature and humidity thresholds.  
-Data is processed from **JSON** and **XML** formats with automatic format detection.
+Data is processed from **JSON**, **XML**, and **YAML** formats with automatic format detection using the **Adapter Pattern** for third-party library integration.
 
 ## Objective
 
@@ -11,8 +11,9 @@ Build a maintainable console app that processes weather data from multiple forma
 
 ### Weather Data Processing
 
-- **Multi-Format Support** for weather data input: **JSON** and **XML** formats
-- **Automatic Format Detection** using parser factory pattern
+- **Multi-Format Support** for weather data input: **JSON**, **XML**, and **YAML** formats
+- **Automatic Format Detection** using parser selector pattern
+- **Adapter Pattern** for third-party library integration (YamlDotNet)
 - **Real-Time Processing** of incoming weather data
 - **Error Handling** for unsupported formats and parsing failures
 
@@ -34,37 +35,45 @@ Build a maintainable console app that processes weather data from multiple forma
 
 - .NET 8 (C#)
 - Storage: JSON configuration files
+- Third-party libraries: YamlDotNet (v13.7.1)
 - Clean architecture:
-  - **Domain**: Entities, Enums, Interfaces, Services, Factories
+  - **Domain**: Entities, Enums, Interfaces, Services, Factories, Adapters
   - **API**: Console UI (menu system)
   - **Configuration**: JSON-based bot settings
-  - **Parsing**: Factory pattern for format detection
+  - **Parsing**: Parser selector pattern with adapter integration
 
 ## Project Structure
 
 ```
 /RTWMS
   ├── API                         # UI layer
+  │   ├── WeatherDataEditMenu     # Weather data editing interface
   │   └── WeatherMonitoringMenu   # Console interface and user interaction
   ├── Configuration               # Configuration layer
   │   └── bot-settings.json      # Bot configuration file
   ├── Domain                      # Domain/Business layer
+  │   ├── Adapters                # Third-party library adapters
+  │   │   └── YamlDotNetAdapter   # YamlDotNet library adapter
   │   ├── Bots                    # Weather bot implementations
   │   │   ├── WeatherBot          # Abstract base class
   │   │   ├── RainBot             # Humidity-based bot
   │   │   ├── SunBot              # High temperature bot
   │   │   └── SnowBot             # Low temperature bot
+  │   ├── Decorators              # Decorator pattern implementations
+  │   │   ├── LoggingDecorator    # Logging functionality
+  │   │   └── LoggingWeatherBotDecorator # Weather bot logging
   │   ├── Enums                   # BotType enumeration
   │   ├── Factories               # Factory pattern implementations
-  │   │   ├── ParserFactory       # Creates appropriate data parser
   │   │   └── WeatherBotFactory   # Creates weather bot instances
   │   ├── Interfaces              # Contracts for services and factories
   │   ├── Models                  # Domain models (WeatherData, BotConfig)
   │   ├── Parsers                 # Data parsing implementations
   │   │   ├── JsonDataParser      # JSON weather data parser
-  │   │   └── XmlDataParser       # XML weather data parser
+  │   │   ├── XmlDataParser       # XML weather data parser
+  │   │   └── ParserSelector      # Parser selection logic
   │   └── Services                # Application logic
-  │       ├── BotConfigurationService  # Bot configuration management
+  │       ├── BotManager          # Bot management service
+  │       ├── WeatherDataSubject  # Observer pattern subject
   │       └── WeatherMonitoringService # Core weather processing service
   ├── Utils                       # Helper Classes
   │   └── ConfigurationReader     # JSON configuration loader
@@ -97,39 +106,71 @@ dotnet run
 ## How to Use
 
 1. **Start the application** - The weather monitoring system will initialize
-2. **Enter weather data** in JSON or XML format:
+2. **Enter weather data** in JSON, XML, or YAML format:
    - **JSON Example**: `{"Location": "City Name", "Temperature": 32, "Humidity": 40}`
    - **XML Example**: `<WeatherData><Location>City Name</Location><Temperature>32</Temperature><Humidity>40</Humidity></WeatherData>`
+   - **YAML Example**: `{ Location: "City Name", Temperature: 32, Humidity: 40 }`
 3. **View bot responses** - Active bots will display their messages based on thresholds
-4. **Type '0'** to quit the application
+4. **Edit weather data** - Option to modify previously entered data
+5. **Type '3'** to quit the application
 
 ## Sample Usage Flow
 
 ```
 Weather Monitoring System Started!
-Enter weather data (JSON or XML format):
-Type '0' to quit
 
-Enter weather data: {"Location": "Desert City", "Temperature": 35, "Humidity": 20}
+------------------------
+1. Enter Weather Data
+2. Edit Weather Data
+3. Quit
+------------------------
+Enter your choice (1-3): 1
+
+Enter weather data (JSON, XML, or YAML format):
+Weather data: { Location: "Desert City", Temperature: 35, Humidity: 20 }
 SunBot activated!
 SunBot: "Wow, it's a scorcher out there!"
+[17:56:33.496] SunBot: processed in 0ms
+Weather data processed successfully!
 
-Enter weather data: {"Location": "Rainy City", "Temperature": 25, "Humidity": 80}
+------------------------
+1. Enter Weather Data
+2. Edit Weather Data
+3. Quit
+------------------------
+Enter your choice (1-3): 1
+
+Enter weather data (JSON, XML, or YAML format):
+Weather data: { Location: "Rainy City", Temperature: 25, Humidity: 80 }
 RainBot activated!
 RainBot: "It looks like it's about to pour down!"
+[17:57:17.937] RainBot: processed in 0ms
+Weather data processed successfully!
 
-Enter weather data: 0
+------------------------
+1. Enter Weather Data
+2. Edit Weather Data
+3. Quit
+------------------------
+Enter your choice (1-3): 3
 Goodbye!
 ```
 
 ## Design Highlights
 
-- **Factory Pattern** for parser and bot creation
-- **Strategy Pattern** for different parsing approaches
+- **Factory Pattern** for bot creation
+- **Adapter Pattern** for third-party library integration (YamlDotNet)
+- **Observer Pattern** for weather bot notifications
+- **Decorator Pattern** for logging functionality
+- **Parser Selector Pattern** for automatic format detection
 - **Dependency Injection** throughout the system
 - **Service Layer** for business logic orchestration
 - **Configuration-driven** bot behavior
 - **Clean separation** of concerns across layers
+
+## System Architecture
+
+For a visual representation of the system architecture and design patterns, see the [UML-style diagram](https://excalidraw.com/#json=YlLWGwFjs9CFh5nnZ9b_y,hPkj7wWGyWt0ibAteHFE5w) created with Excalidraw.
 
 ## :stars: Acknowledgment
 
