@@ -1,4 +1,3 @@
-using RTWMS.Domain.Bots;
 using RTWMS.Domain.Enums;
 using RTWMS.Domain.Interfaces;
 using RTWMS.Domain.Models;
@@ -29,12 +28,13 @@ public class BotManager : IBotManager
                 }
             }
         }
+
         return _instance;
     }
 
-    public List<WeatherBot> GetConfiguredBots()
+    public List<IWeatherBot> GetConfiguredBots()
     {
-        var configuredBots = new List<WeatherBot>();
+        var configuredBots = new List<IWeatherBot>();
         var allBotsConfigs = ConfigurationReader.ReadBotConfiguration();
         var configsProperties = allBotsConfigs?.GetType().GetProperties();
 
