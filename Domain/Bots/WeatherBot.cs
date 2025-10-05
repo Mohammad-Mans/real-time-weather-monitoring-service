@@ -1,4 +1,5 @@
 using RTWMS.Domain.Interfaces;
+using RTWMS.Domain.Models;
 
 namespace RTWMS.Domain.Bots;
 
@@ -12,5 +13,5 @@ public abstract class WeatherBot(string message) : IWeatherBot
         Console.WriteLine($"{Name}: \"{message}\"");
     }
 
-    public abstract void ProcessWeatherData(double temperature, double humidity);
+    public abstract bool TryProcessData(WeatherData data);
 }

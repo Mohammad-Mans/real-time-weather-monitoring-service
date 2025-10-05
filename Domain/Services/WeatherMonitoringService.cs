@@ -24,7 +24,7 @@ public class WeatherMonitoringService(IParserSelector parserSelector, IBotManage
 
         foreach (var bot in _bots)
         {
-            bot.ProcessWeatherData(weatherData.Temperature, weatherData.Humidity);
+            bot.TryProcessData(weatherData);
         }
     }
 }
