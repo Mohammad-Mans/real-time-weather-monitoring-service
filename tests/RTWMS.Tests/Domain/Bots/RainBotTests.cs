@@ -1,3 +1,4 @@
+using AutoFixture;
 using RTWMS.Domain.Bots;
 using RTWMS.Domain.Models;
 
@@ -6,12 +7,12 @@ namespace RTWMS.Tests.Domain.Bots;
 public class RainBotTests
 {
     private const double DefaultHumidityThreshold = 70.0;
-    private const string DefaultMessage = "Test message";
 
     [Fact]
     public void Constructor_ShouldSetCorrectName()
     {
-        var rainBot = new RainBot(70.0, "Test message");
+        var fixture = new Fixture();
+        var rainBot = new RainBot(DefaultHumidityThreshold, fixture.Create<string>());
         rainBot.Name.Should().Be("RainBot");
     }
 
@@ -25,13 +26,11 @@ public class RainBotTests
         double humidity,
         bool expectedResult)
     {
-        var rainBot = new RainBot(DefaultHumidityThreshold, DefaultMessage);
-        var weatherData = new WeatherData
-        {
-            Location = "Test City",
-            Temperature = 25.0,
-            Humidity = humidity
-        };
+        var fixture = new Fixture();
+        var rainBot = new RainBot(DefaultHumidityThreshold, fixture.Create<string>());
+        var weatherData = fixture.Build<WeatherData>()
+            .With(data => data.Humidity, humidity)
+            .Create();
 
         var result = rainBot.TryProcessData(weatherData);
 

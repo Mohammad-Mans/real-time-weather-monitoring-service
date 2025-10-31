@@ -1,3 +1,4 @@
+using AutoFixture;
 using RTWMS.Domain.Bots;
 using RTWMS.Domain.Models;
 
@@ -6,12 +7,12 @@ namespace RTWMS.Tests.Domain.Bots;
 public class SnowBotTests
 {
     private const double DefaultTemperatureThreshold = 0.0;
-    private const string DefaultMessage = "Test message";
 
     [Fact]
     public void Constructor_ShouldSetCorrectName()
     {
-        var snowBot = new SnowBot(0.0, "Test message");
+        var fixture = new Fixture();
+        var snowBot = new SnowBot(DefaultTemperatureThreshold, fixture.Create<string>());
         snowBot.Name.Should().Be("SnowBot");
     }
 
@@ -25,13 +26,11 @@ public class SnowBotTests
         double temperature,
         bool expectedResult)
     {
-        var snowBot = new SnowBot(DefaultTemperatureThreshold, DefaultMessage);
-        var weatherData = new WeatherData
-        {
-            Location = "Test City",
-            Temperature = temperature,
-            Humidity = 50.0
-        };
+        var fixture = new Fixture();
+        var snowBot = new SnowBot(DefaultTemperatureThreshold, fixture.Create<string>());
+        var weatherData = fixture.Build<WeatherData>()
+            .With(data => data.Temperature, temperature)
+            .Create();
 
         var result = snowBot.TryProcessData(weatherData);
 

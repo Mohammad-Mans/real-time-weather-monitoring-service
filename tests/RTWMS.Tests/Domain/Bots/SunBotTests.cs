@@ -1,3 +1,4 @@
+using AutoFixture;
 using RTWMS.Domain.Bots;
 using RTWMS.Domain.Models;
 
@@ -6,12 +7,12 @@ namespace RTWMS.Tests.Domain.Bots;
 public class SunBotTests
 {
     private const double DefaultTemperatureThreshold = 30.0;
-    private const string DefaultMessage = "Test message";
 
     [Fact]
     public void Constructor_ShouldSetCorrectName()
     {
-        var sunBot = new SunBot(30.0, "Test message");
+        var fixture = new Fixture();
+        var sunBot = new SunBot(DefaultTemperatureThreshold, fixture.Create<string>());
         sunBot.Name.Should().Be("SunBot");
     }
 
@@ -25,13 +26,11 @@ public class SunBotTests
         double temperature,
         bool expectedResult)
     {
-        var sunBot = new SunBot(DefaultTemperatureThreshold, DefaultMessage);
-        var weatherData = new WeatherData
-        {
-            Location = "Test City",
-            Temperature = temperature,
-            Humidity = 50.0
-        };
+        var fixture = new Fixture();
+        var sunBot = new SunBot(DefaultTemperatureThreshold, fixture.Create<string>());
+        var weatherData = fixture.Build<WeatherData>()
+            .With(data => data.Temperature, temperature)
+            .Create();
 
         var result = sunBot.TryProcessData(weatherData);
 
