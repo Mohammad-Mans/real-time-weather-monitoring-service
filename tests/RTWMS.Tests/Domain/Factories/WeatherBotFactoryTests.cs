@@ -1,3 +1,4 @@
+using AutoFixture;
 using RTWMS.Domain.Bots;
 using RTWMS.Domain.Enums;
 using RTWMS.Domain.Factories;
@@ -20,12 +21,8 @@ public class WeatherBotFactoryTests
     [Fact]
     public void GetBot_ShouldCreateCorrectBotType_WhenValidBotType()
     {
-        var config = new BotConfig
-        {
-            HumidityThreshold = 80.0,
-            TemperatureThreshold = 30.0,
-            Message = "Test message"
-        };
+        var fixture = new Fixture();
+        var config = fixture.Create<BotConfig>();
 
         _mockDecorator.Setup(decorator => decorator.Apply(It.IsAny<IWeatherBot>()))
             .Returns((IWeatherBot bot) => bot);
@@ -42,11 +39,8 @@ public class WeatherBotFactoryTests
     [Fact]
     public void GetBot_ShouldReturnNull_WhenBotTypeIsUnknown()
     {
-        var config = new BotConfig
-        {
-            TemperatureThreshold = 25.0,
-            Message = "Test message"
-        };
+        var fixture = new Fixture();
+        var config = fixture.Create<BotConfig>();
 
         var result = _factory.GetBot(config, (BotType)999);
 
@@ -57,11 +51,8 @@ public class WeatherBotFactoryTests
     [Fact]
     public void GetBot_ShouldApplyDecorators_WhenDecoratorsProvided()
     {
-        var config = new BotConfig
-        {
-            HumidityThreshold = 80.0,
-            Message = "Rain alert message"
-        };
+        var fixture = new Fixture();
+        var config = fixture.Create<BotConfig>();
 
         _mockDecorator.Setup(decorator => decorator.Apply(It.IsAny<IWeatherBot>()))
             .Returns((IWeatherBot bot) => bot);
