@@ -1,3 +1,4 @@
+using AutoFixture;
 using RTWMS.Domain.Interfaces;
 using RTWMS.Domain.Models;
 using RTWMS.Domain.Services;
@@ -33,13 +34,9 @@ public class WeatherMonitoringServiceTests
     [Fact]
     public void ProcessWeatherInput_ShouldReturnWeatherData_WhenValidInputAndSuccessfulParsing()
     {
-        const string input = "valid weather data";
-        var expectedWeatherData = new WeatherData
-        {
-            Location = "Test City",
-            Temperature = 25.5,
-            Humidity = 60.0
-        };
+        var fixture = new Fixture();
+        var input = fixture.Create<string>();
+        var expectedWeatherData = fixture.Create<WeatherData>();
 
         _mockParserSelector.Setup(selector => selector.SelectParser(input)).Returns(_mockDataParser.Object);
         _mockDataParser.Setup(parser => parser.TryParse(input, out expectedWeatherData)).Returns(true);
@@ -56,7 +53,8 @@ public class WeatherMonitoringServiceTests
     [Fact]
     public void ProcessWeatherInput_ShouldReturnNull_WhenNoParserFound()
     {
-        const string input = "unsupported format";
+        var fixture = new Fixture();
+        var input = fixture.Create<string>();
         _mockParserSelector.Setup(selector => selector.SelectParser(input)).Returns((IDataParser?)null);
 
         var result = _service.ProcessWeatherInput(input);
@@ -71,7 +69,8 @@ public class WeatherMonitoringServiceTests
     [Fact]
     public void ProcessWeatherInput_ShouldReturnNull_WhenParsingFails()
     {
-        const string input = "invalid weather data";
+        var fixture = new Fixture();
+        var input = fixture.Create<string>();
         WeatherData? nullWeatherData = null;
 
         _mockParserSelector.Setup(selector => selector.SelectParser(input)).Returns(_mockDataParser.Object);
@@ -100,12 +99,8 @@ public class WeatherMonitoringServiceTests
     [Fact]
     public void UpdateWeatherData_ShouldDelegateToSubject()
     {
-        var weatherData = new WeatherData
-        {
-            Location = "Test City",
-            Temperature = 25.5,
-            Humidity = 60.0
-        };
+        var fixture = new Fixture();
+        var weatherData = fixture.Create<WeatherData>();
 
         _service.UpdateWeatherData(weatherData);
 
