@@ -1,3 +1,5 @@
+[![Build and Test](https://github.com/Mohammad-Mans/real-time-weather-monitoring-service/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/Mohammad-Mans/real-time-weather-monitoring-service/actions/workflows/build-and-test.yml)
+
 # Real-Time Weather Monitoring System
 
 A C# console application that monitors weather data in **real-time** and activates specialized **weather bots** based on temperature and humidity thresholds.  
