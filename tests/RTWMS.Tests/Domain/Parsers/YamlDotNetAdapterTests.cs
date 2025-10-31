@@ -1,4 +1,6 @@
+using AutoFixture;
 using RTWMS.Domain.Adapters;
+using RTWMS.Domain.Models;
 
 namespace RTWMS.Tests.Domain.Parsers;
 
@@ -9,15 +11,15 @@ public class YamlDotNetAdapterTests
     [Fact]
     public void TryParse_ShouldReturnTrue_WhenValidYaml()
     {
-        const string validYaml = "{Location: Test City, Temperature: 25.5, Humidity: 60.0}";
+        var fixture = new Fixture();
+        var expectedData = fixture.Create<WeatherData>();
+        var validYaml = $"{{Location: {expectedData.Location}, Temperature: {expectedData.Temperature}, Humidity: {expectedData.Humidity}}}";
 
         var result = _adapter.TryParse(validYaml, out var data);
 
         result.Should().BeTrue();
         data.Should().NotBeNull();
-        data!.Location.Should().Be("Test City");
-        data.Temperature.Should().Be(25.5);
-        data.Humidity.Should().Be(60.0);
+        data.Should().BeEquivalentTo(expectedData);
     }
 
     [Fact]

@@ -1,4 +1,7 @@
+using System.Text.Json;
+using AutoFixture;
 using RTWMS.Domain.Parsers;
+using RTWMS.Domain.Models;
 
 namespace RTWMS.Tests.Domain.Parsers;
 
@@ -9,15 +12,15 @@ public class JsonDataParserTests
     [Fact]
     public void TryParse_ShouldReturnTrue_WhenValidJson()
     {
-        const string validJson = """{"Location": "Test City","Temperature": 25.5,"Humidity": 60.0}""";
+        var fixture = new Fixture();
+        var expectedData = fixture.Create<WeatherData>();
+        var validJson = JsonSerializer.Serialize(expectedData);
 
         var result = _parser.TryParse(validJson, out var data);
 
         result.Should().BeTrue();
         data.Should().NotBeNull();
-        data.Location.Should().Be("Test City");
-        data.Temperature.Should().Be(25.5);
-        data.Humidity.Should().Be(60.0);
+        data.Should().BeEquivalentTo(expectedData);
     }
 
     [Fact]

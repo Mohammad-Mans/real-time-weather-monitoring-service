@@ -1,4 +1,6 @@
+using AutoFixture;
 using RTWMS.Domain.Parsers;
+using RTWMS.Domain.Models;
 
 namespace RTWMS.Tests.Domain.Parsers;
 
@@ -9,16 +11,16 @@ public class XmlDataParserTests
     [Fact]
     public void TryParse_ShouldReturnTrue_WhenValidXml()
     {
-        const string validXml =
-            "<WeatherData><Location>Test City</Location><Temperature>25.5</Temperature><Humidity>60</Humidity></WeatherData>";
+        var fixture = new Fixture();
+        var expectedData = fixture.Create<WeatherData>();
+        var validXml =
+            $"<WeatherData><Location>{expectedData.Location}</Location><Temperature>{expectedData.Temperature}</Temperature><Humidity>{expectedData.Humidity}</Humidity></WeatherData>";
 
         var result = _parser.TryParse(validXml, out var data);
 
         result.Should().BeTrue();
         data.Should().NotBeNull();
-        data.Location.Should().Be("Test City");
-        data.Temperature.Should().Be(25.5);
-        data.Humidity.Should().Be(60.0);
+        data.Should().BeEquivalentTo(expectedData);
     }
 
     [Fact]
