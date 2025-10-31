@@ -1,3 +1,5 @@
+using System.Text.Json;
+using AutoFixture;
 using RTWMS.Domain.Models;
 using RTWMS.Utils;
 
@@ -27,36 +29,17 @@ public class ConfigurationReaderTests : IDisposable
     [Fact]
     public void ReadBotConfiguration_ShouldReturnValidConfig_WhenValidJsonFileExists()
     {
-        var validJson =
-            """
-            {
-                "RainBot": {
-                    "Enabled": true,
-                    "HumidityThreshold": 80.0,
-                    "TemperatureThreshold": 20.0,
-                    "Message": "It looks like it's about to pour down!"
-                },
-                "SunBot": {
-                    "Enabled": true,
-                    "HumidityThreshold": 40.0,
-                    "TemperatureThreshold": 30.0,
-                    "Message": "Wow, it's a scorcher out there!"
-                }
-            }
-            """;
+        var fixture = new Fixture();
+        var expectedConfig = fixture.Create<AllBotsConfigs>();
+        var jsonOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, WriteIndented = true };
+        var validJson = JsonSerializer.Serialize(expectedConfig, jsonOptions);
 
         File.WriteAllText(_testConfigPath, validJson);
 
         var result = ConfigurationReader.ReadBotConfiguration(_testConfigPath);
 
         result.Should().NotBeNull();
-        result.RainBot.Enabled.Should().BeTrue();
-        result.RainBot.HumidityThreshold.Should().Be(80.0);
-        result.RainBot.Message.Should().Be("It looks like it's about to pour down!");
-
-        result.SunBot.Enabled.Should().BeTrue();
-        result.SunBot.TemperatureThreshold.Should().Be(30.0);
-        result.SunBot.Message.Should().Be("Wow, it's a scorcher out there!");
+        result.Should().BeEquivalentTo(expectedConfig);
     }
 
     [Fact]
