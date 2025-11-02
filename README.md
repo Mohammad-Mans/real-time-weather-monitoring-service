@@ -170,7 +170,10 @@ Goodbye!
 
 ## System Architecture
 
-For a visual representation of the system architecture and design patterns, see the [UML-style diagram](https://excalidraw.com/#json=YlLWGwFjs9CFh5nnZ9b_y,hPkj7wWGyWt0ibAteHFE5w) created with Excalidraw.
+For a visual representation of the system architecture and design patterns, see the [UML-style diagram](https://excalidraw.com/#json=WdTnWn-BmR7enM60klxJ5,uPvUhdhE9I4qCfJ0Qq6A_A) created with Excalidraw.
+
+<img width="5652" height="2358" alt="image" src="https://github.com/user-attachments/assets/20ed8574-2478-418e-b7c0-fc76b9a4e23b" />
+
 
 ## :stars: Acknowledgment
 
