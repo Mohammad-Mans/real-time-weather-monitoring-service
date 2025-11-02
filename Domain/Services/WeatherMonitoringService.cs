@@ -9,10 +9,10 @@ public class WeatherMonitoringService : IWeatherMonitoringService
     private readonly List<IWeatherBot> _bots;
     private readonly ISubject _weatherDataSubject;
 
-    public WeatherMonitoringService(IParserSelector parserSelector, IBotManager botManager, ISubject weatherDataSubject)
+    public WeatherMonitoringService(IParserSelector parserSelector, IEnumerable<IWeatherBot> bots, ISubject weatherDataSubject)
     {
         _parserSelector = parserSelector;
-        _bots = botManager.GetConfiguredBots();
+        _bots = bots.ToList();
         _weatherDataSubject = weatherDataSubject;
 
         foreach (var bot in _bots)
