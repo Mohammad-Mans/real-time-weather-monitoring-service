@@ -12,11 +12,11 @@ public class ConfigurationReader
         return Path.Combine(parentPath, @"Configuration\bot-settings.json");
     }
 
-    public static AllBotsConfigs ReadBotConfiguration()
+    public static AllBotsConfigs ReadBotConfiguration(string? configPath = null)
     {
         try
         {
-            var configPath = GetConfigPath();
+            configPath ??= GetConfigPath();
             var jsonString = File.ReadAllText(configPath);
 
             var options = new JsonSerializerOptions
