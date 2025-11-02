@@ -29,10 +29,7 @@ public class WeatherMonitoringIntegrationTests
         var rainBot = new RainBot(RainBotHumidityThreshold, fixture.Create<string>());
         var bots = new List<IWeatherBot> { rainBot };
 
-        var mockBotManager = new Mock<IBotManager>();
-        mockBotManager.Setup(manager => manager.GetConfiguredBots()).Returns(bots);
-
-        var service = new WeatherMonitoringService(parserSelector, mockBotManager.Object, weatherDataSubject);
+        var service = new WeatherMonitoringService(parserSelector, bots, weatherDataSubject);
 
         var result = service.ProcessWeatherInput(jsonInput);
         result.Should().NotBeNull();

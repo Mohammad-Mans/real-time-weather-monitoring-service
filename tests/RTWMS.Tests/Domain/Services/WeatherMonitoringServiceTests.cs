@@ -8,7 +8,6 @@ namespace RTWMS.Tests.Domain.Services;
 public class WeatherMonitoringServiceTests
 {
     private readonly Mock<IParserSelector> _mockParserSelector;
-    private readonly Mock<IBotManager> _mockBotManager;
     private readonly Mock<ISubject> _mockWeatherDataSubject;
     private readonly Mock<IDataParser> _mockDataParser;
     private readonly Mock<IWeatherBot> _mockWeatherBot;
@@ -17,17 +16,15 @@ public class WeatherMonitoringServiceTests
     public WeatherMonitoringServiceTests()
     {
         _mockParserSelector = new Mock<IParserSelector>();
-        _mockBotManager = new Mock<IBotManager>();
         _mockWeatherDataSubject = new Mock<ISubject>();
         _mockDataParser = new Mock<IDataParser>();
         _mockWeatherBot = new Mock<IWeatherBot>();
 
         var bots = new List<IWeatherBot> { _mockWeatherBot.Object };
-        _mockBotManager.Setup(manager => manager.GetConfiguredBots()).Returns(bots);
 
         _service = new WeatherMonitoringService(
             _mockParserSelector.Object,
-            _mockBotManager.Object,
+            bots,
             _mockWeatherDataSubject.Object);
     }
 
